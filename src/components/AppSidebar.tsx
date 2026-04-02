@@ -14,7 +14,7 @@ const AppSidebar = ({ onClose }: { onClose?: () => void }) => {
       <div className="flex items-center justify-between mb-10">
         <NavLink to="/" className="flex items-center gap-3 active:scale-95 transition-transform">
           <div className="w-10 h-10 rounded-xl bg-zinc-900 p-2 flex items-center justify-center border border-zinc-800 shadow-[0_0_15px_rgba(255,255,255,0.03)] hover:border-zinc-600 transition-colors">
-            <img src="/logo.png" alt="Concept X" className="w-full h-full object-contain" />
+            <img src="/XforZ/logo.png" alt="Concept X" className="w-full h-full object-contain" />
           </div>
           <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white hidden sm:block">Concept X</span>
         </NavLink>

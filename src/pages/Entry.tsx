@@ -9,7 +9,7 @@ const Entry = () => {
       <div className="max-w-2xl w-full text-center space-y-12 sm:space-y-16 relative z-10 animate-in fade-in zoom-in duration-700">
         <div className="space-y-6">
           <div className="flex justify-center">
-            <img src="/logo.png" alt="Concept X" className="w-20 h-20 sm:w-24 sm:h-24 object-contain shadow-[0_0_60px_rgba(255,255,255,0.05)]" />
+            <img src="/XforZ/logo.png" alt="Concept X" className="w-20 h-20 sm:w-24 sm:h-24 object-contain shadow-[0_0_60px_rgba(255,255,255,0.05)]" />
           </div>
           <p className="text-zinc-500 text-base sm:text-xl font-light tracking-[0.1em] uppercase px-4 leading-relaxed">
             Built for the few who execute.

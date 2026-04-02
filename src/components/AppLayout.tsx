@@ -35,7 +35,7 @@ const AppLayout = () => {
                   <Menu className="w-6 h-6" />
                 </button>
                 <div className="lg:hidden w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 p-1.5 flex items-center justify-center shrink-0">
-                  <img src="/logo.png" alt="Concept X" className="w-full h-full object-contain" />
+                  <img src="/XforZ/logo.png" alt="Concept X" className="w-full h-full object-contain" />
                 </div>
               </div>
               
