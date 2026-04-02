@@ -14,102 +14,116 @@ const Dashboard = () => {
     .slice(0, 3);
 
   return (
-    <div className="space-y-16 sm:space-y-24 py-8 sm:py-12 animate-in fade-in duration-700">
+    <div className="space-y-16 py-12 animate-in fade-in duration-700">
       {/* Grid-Based Layout for Header and Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-11 gap-8 lg:gap-16">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-20">
         {/* Left Column: Title and Active Projects */}
-        <div className="lg:col-span-7 space-y-12 sm:space-y-16">
-          <header className="space-y-3">
-            <h1 className="text-4xl sm:text-5xl font-display font-black tracking-tighter text-white uppercase italic">Dashboard</h1>
-            <p className="text-zinc-500 text-sm sm:text-lg uppercase tracking-[0.25em] font-black leading-tight">Execution Engine: Manual Control</p>
+        <div className="lg:col-span-8 space-y-12">
+          <header className="space-y-2">
+            <h1 className="text-5xl font-bold tracking-tight text-white mb-2">Dashboard</h1>
+            <p className="text-zinc-500 text-[14px] font-medium tracking-tight opacity-80">Manual Control • Project Execution Engine</p>
           </header>
 
-          <main className="space-y-10 sm:space-y-14">
-            <div className="flex items-center justify-between border-l-2 border-primary pl-6">
+          <main className="space-y-10">
+            <div className="flex items-center justify-between border-b border-zinc-900 pb-6">
               <div className="space-y-1">
-                <h2 className="font-display font-black text-2xl sm:text-3xl tracking-tight text-white uppercase italic">Active Projects</h2>
-                <p className="text-[10px] text-zinc-600 uppercase tracking-[0.4em] font-black">Execution Stack</p>
+                <h2 className="font-bold text-2xl tracking-tight text-white">Active Projects</h2>
+                <p className="text-[13px] text-zinc-500 font-medium">Your primary execution stack</p>
               </div>
-              <button onClick={() => navigate('/opportunity')} className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-white transition-colors shrink-0">
-                Expand All →
+              <button 
+                onClick={() => navigate('/opportunity')} 
+                className="text-[13px] font-bold text-primary hover:brightness-110 transition-all uppercase tracking-widest"
+              >
+                Expand all →
               </button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-10">
-              {activeProjects.map((p) => (
-                <ProjectCard key={p.id} project={p} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              {activeProjects.map((p, idx) => (
+                <ProjectCard 
+                  key={p.id} 
+                  project={p} 
+                  variant="active" 
+                  updatedAt={idx === 0 ? "Active now" : `${idx + 1}h ago`}
+                  activity={idx === 0 ? "3 executing" : "Live stack"}
+                />
               ))}
             </div>
           </main>
         </div>
 
         {/* Right Column: Actions and Needed Sections */}
-        <div className="lg:col-span-4 space-y-12 sm:space-y-16 lg:border-l lg:border-zinc-900 lg:pl-12">
+        <div className="lg:col-span-4 space-y-16">
           {/* Quick Actions Header */}
           <div className="flex flex-col gap-4">
-            <button onClick={() => navigate('/opportunity')} className="w-full px-8 py-4 bg-white text-black rounded-xl font-black text-[10px] uppercase tracking-[0.3em] hover:bg-zinc-200 transition-all shadow-2xl shadow-white/5 active:scale-95">
+            <button 
+              onClick={() => navigate('/opportunity')} 
+              className="w-full h-12 bg-primary text-white font-bold text-[13px] rounded-xl hover:brightness-110 transition-all active:scale-[0.98] shadow-xl shadow-primary/20 uppercase tracking-widest"
+            >
               New Build
             </button>
-            <button onClick={() => navigate('/feed')} className="w-full px-8 py-4 bg-zinc-900 text-white border border-zinc-800 rounded-xl font-black text-[10px] uppercase tracking-[0.3em] hover:bg-zinc-800 transition-all active:scale-95">
+            <button 
+              onClick={() => navigate('/feed')} 
+              className="w-full h-12 bg-zinc-900 border border-zinc-800 text-white font-bold text-[13px] rounded-xl hover:bg-zinc-800 transition-all active:scale-[0.98] uppercase tracking-widest"
+            >
               Live Pulse
             </button>
           </div>
 
-          <aside className="space-y-10 sm:space-y-14">
-            <div className="space-y-1 border-l-2 border-accent pl-6">
-              <h2 className="font-display font-black text-xl sm:text-2xl tracking-tight text-white uppercase italic">Needed</h2>
-              <p className="text-[10px] text-zinc-600 uppercase tracking-[0.4em] font-black">Signal Match</p>
+          <aside className="space-y-8 opacity-60 hover:opacity-100 transition-opacity duration-500">
+            <div className="space-y-1 border-b border-zinc-900 pb-4">
+              <h2 className="font-bold text-lg tracking-tight text-white/90">Needed</h2>
+              <p className="text-[12px] text-zinc-600 font-medium">Subtle match signals</p>
             </div>
-            <div className="space-y-8">
-              {suggestedProjects.map((p) => (
-                <ProjectCard 
+            <div className="space-y-6">
+              {suggestedProjects.map((p, idx) => (
+                 <ProjectCard 
                   key={p.id} 
                   project={p} 
                   match={p.matchData.score} 
                   urgency={p.matchData.urgency} 
                   reasoning={p.matchData.reasoning}
-                  cta="Join & Build"
+                  cta="Join"
+                  variant="intel"
+                  updatedAt={idx === 0 ? "New match" : "Today"}
+                  activity={idx === 0 ? "+2 viewed" : undefined}
                 />
               ))}
-              <button 
-                onClick={() => navigate('/opportunity')}
-                className="w-full py-6 rounded-2xl border border-dashed border-zinc-800 text-[10px] font-black text-zinc-700 hover:text-white hover:border-zinc-500 transition-all uppercase tracking-[0.5em] active:scale-95"
-              >
-                Search Engine
-              </button>
             </div>
           </aside>
         </div>
       </div>
 
       {/* Execution Feed (Full Width within container) */}
-      <section className="space-y-12 animate-fade-in-up border-t border-zinc-900 pt-16" style={{ animationDelay: '0.4s' }}>
-        <div className="flex items-center justify-between border-l-2 border-zinc-700 pl-6">
+      <section className="space-y-10 pt-20 border-t border-zinc-900 opacity-60 hover:opacity-100 transition-opacity duration-500">
+        <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <h2 className="font-display font-black text-2xl sm:text-3xl tracking-tight text-white uppercase italic">Pulse</h2>
-            <p className="text-[10px] text-zinc-600 uppercase tracking-[0.4em] font-black">Global Execution Feed</p>
+            <h2 className="font-bold text-xl tracking-tight text-white/90">Pulse</h2>
+            <p className="text-[12px] text-zinc-600 font-medium">Activity and background updates</p>
           </div>
-          <button onClick={() => navigate('/feed')} className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-white transition-colors shrink-0">
-            View All Updates →
+          <button 
+            onClick={() => navigate('/feed')} 
+            className="text-[12px] font-bold text-zinc-500 hover:text-white transition-all uppercase tracking-widest"
+          >
+            History →
           </button>
         </div>
         
-        <div className="flex flex-col gap-0 border-l border-zinc-900 ml-1">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {mockExecutionFeed.slice(0, 3).map((update, index) => (
             <div 
               key={update.id} 
-              className="relative pl-10 pb-12 last:pb-0 group animate-fade-in-up"
-              style={{ animationDelay: `${0.6 + index * 0.1}s` }}
+              className="bg-card/50 border border-border/30 p-6 rounded-2xl flex flex-col gap-4 hover:border-zinc-800 transition-all cursor-pointer group"
             >
-              <div className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_10px_rgba(59,130,246,0.5)] group-hover:scale-150 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.8)] transition-all duration-500" />
-              <div className="space-y-2">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
-                  <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">{update.projectTitle}</span>
-                  <span className="text-[10px] text-zinc-700 font-mono italic">{update.timestamp}</span>
-                </div>
-                <p className="text-xl sm:text-2xl text-zinc-300 leading-tight font-display font-light italic tracking-tight group-hover:text-white transition-colors duration-300">
-                  {update.text}
-                </p>
+              <div className="flex items-center justify-between">
+                 <div className="flex items-center gap-3">
+                   <div className="w-1 h-1 rounded-full bg-zinc-700 group-hover:bg-success transition-colors" />
+                   <span className="text-[10px] font-bold text-zinc-700 uppercase tracking-widest group-hover:text-zinc-500">{update.projectTitle}</span>
+                 </div>
+                 <span className="text-[10px] text-zinc-900 font-mono font-bold">{update.timestamp}</span>
               </div>
+              <p className="text-[14px] text-zinc-500 font-medium leading-relaxed group-hover:text-zinc-300 transition-colors">
+                {update.text}
+              </p>
             </div>
           ))}
         </div>

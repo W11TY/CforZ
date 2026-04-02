@@ -1,6 +1,7 @@
 import { Project } from '@/lib/mockData';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 interface ProjectCardProps {
   project: Project;
@@ -8,88 +9,139 @@ interface ProjectCardProps {
   urgency?: string;
   reasoning?: string;
   cta?: string;
+  variant?: 'primary' | 'intel' | 'active';
+  activity?: string;
+  updatedAt?: string;
 }
 
-const ProjectCard = ({ project, match, urgency, reasoning, cta }: ProjectCardProps) => {
+const ProjectCard = ({ project, match, urgency, reasoning, cta, variant = 'primary', activity, updatedAt }: ProjectCardProps) => {
   const navigate = useNavigate();
-  const isHighMatch = match && match >= 80;
+  const [isJoined, setIsJoined] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  
+  const isHighMatch = (match && match >= 70) || variant === 'active';
+  const isIntel = variant === 'intel';
+  const isActive = variant === 'active';
+
+  const handleJoin = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsAnimating(true);
+    setTimeout(() => {
+      setIsJoined(true);
+      setIsAnimating(false);
+    }, 600);
+  };
 
   return (
     <div
-      className={`bg-zinc-900/40 border rounded-[24px] p-6 sm:p-8 hover:-translate-y-2 transition-all duration-500 cursor-pointer flex flex-col gap-5 group h-full relative overflow-hidden ${
-        isHighMatch ? 'border-primary/40 shadow-[0_0_20px_rgba(59,130,246,0.05)]' : 'border-zinc-800 hover:border-zinc-500'
+      className={`bg-card border rounded-2xl transition-all duration-500 cursor-pointer flex flex-col gap-7 group h-full relative interactive-lift elevation-soft ${
+        isActive 
+          ? 'p-8 sm:p-10 bg-zinc-900 border-border/80' 
+          : (isIntel 
+              ? 'p-7 sm:p-9 bg-zinc-950 border-accent/20 shadow-[0_0_40px_rgba(175,82,222,0.1)] ring-1 ring-accent/5' 
+              : 'p-6 sm:p-8 border-border/60 hover:bg-zinc-900/40')
       }`}
       onClick={() => navigate(`/project/${project.id}`)}
     >
-      {/* High Match Indicator */}
-      {match && (
-        <div className={`absolute top-0 right-0 px-4 py-1.5 border-b border-l rounded-bl-xl ${
-          isHighMatch ? 'bg-primary/10 border-primary/20' : 'bg-zinc-900/50 border-zinc-800'
-        }`}>
-          <span className={`text-[10px] font-black uppercase tracking-widest ${
-            isHighMatch ? 'text-primary' : 'text-zinc-600'
-          }`}>
-             {isHighMatch ? `Algorithm Pick • ${match}%` : `${match}% Match`}
-          </span>
+      {/* Live & Freshness Signals */}
+      <div className="flex items-center justify-between">
+        <div className="flex flex-wrap gap-2">
+          {match && (
+            <div className={`px-3.5 py-1.5 rounded-full border shadow-sm transition-all duration-500 hover:scale-105 ${isIntel ? 'bg-accent/15 border-accent/30 ring-1 ring-accent/20 scale-110 -translate-x-1' : 'bg-primary/10 border-primary/20'}`}>
+              <span className={`text-[10px] font-black uppercase tracking-tight ${isIntel ? 'text-accent' : 'text-primary'}`}>
+                 {match}% Match
+              </span>
+            </div>
+          )}
+          {activity && (
+             <div className="px-3 py-1 bg-zinc-900 border border-zinc-800 rounded-full animate-pulse-slow">
+               <span className="text-[10px] font-black text-zinc-500 uppercase tracking-tight">
+                 {activity}
+               </span>
+             </div>
+          )}
+          {isActive && (
+            <div className="px-3 py-1 bg-success/10 rounded-full border border-success/20">
+               <span className="text-[10px] font-black text-success uppercase tracking-tight animate-pulse">
+                 Active Engine
+               </span>
+             </div>
+          )}
         </div>
-      )}
+        {updatedAt && (
+           <span className="text-[10px] font-bold text-zinc-700 uppercase tracking-widest tabular-nums">
+             {updatedAt}
+           </span>
+        )}
+      </div>
       
-      <div className="flex items-start justify-between mt-2">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center text-lg font-display font-bold text-white group-hover:bg-primary transition-colors duration-500">
+      <div className="space-y-5">
+        <div className="flex items-center gap-5">
+          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black text-white transition-all duration-300 ${isActive ? 'bg-zinc-950 border border-border/50 shadow-xl' : (isIntel ? 'bg-zinc-950 border border-accent/20' : 'bg-zinc-900 border border-zinc-800')}`}>
             {project.title[0]}
           </div>
-          <div>
-            <h3 className="font-display font-semibold text-white tracking-tight">{project.title}</h3>
-            {urgency ? (
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isHighMatch ? 'bg-warning' : 'bg-zinc-500'}`} />
-                <span className={`text-[9px] font-bold uppercase tracking-widest flex-1 truncate ${isHighMatch ? 'text-warning' : 'text-zinc-500'}`}>{urgency}</span>
-              </div>
-            ) : (
-              <span className={`text-[9px] font-bold uppercase tracking-widest text-zinc-500 mt-0.5 block`}>
-                {project.stage} Stage
-              </span>
-            )}
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+               <h3 className={`font-black text-white tracking-tight leading-tight transition-all duration-300 group-hover:text-primary/90 ${isActive ? 'text-2xl' : (isIntel ? 'text-xl' : 'text-base')}`}>{project.title}</h3>
+               {urgency && <div className="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(255,152,0,0.5)]" />}
+            </div>
+            <p className="text-[11px] font-bold text-zinc-600 uppercase tracking-[0.2em]">
+               {project.createdBy}
+            </p>
           </div>
         </div>
+
+        <p className={`text-zinc-500 line-clamp-2 leading-relaxed font-normal ${isActive ? 'text-[15px]' : (isIntel ? 'text-[14px]' : 'text-[13px]')}`}>{project.description}</p>
       </div>
 
-      <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed font-light">{project.description}</p>
-
-      {reasoning && (
-        <div className="bg-zinc-950/50 border border-zinc-800/50 rounded-xl p-3 inline-flex items-start gap-2">
-           <span className="text-primary font-black mt-[1px]">↳</span>
-           <p className="text-[10px] text-zinc-300 font-medium tracking-wide flex-1">{reasoning}</p>
-        </div>
-      )}
-
-      <div className="flex flex-wrap gap-1.5 mt-auto pt-2">
+      <div className="flex flex-wrap gap-2 mt-auto pb-2">
         {project.neededRoles.map((role) => (
-          <span key={role} className="text-[9px] px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 font-bold uppercase tracking-widest">
+          <span key={role} className="text-[9px] px-3 py-1.5 rounded-lg bg-zinc-900/50 border border-border text-zinc-600 font-black uppercase tracking-[0.1em] group-hover:border-zinc-700 transition-colors">
             {role}
           </span>
         ))}
       </div>
 
-      <div className="flex items-center justify-between border-t border-zinc-900 pt-6 mt-4">
-        <div className="flex items-center gap-4">
-          <div className="w-20 h-1.5 rounded-full bg-zinc-900 relative overflow-hidden">
-            <div className="absolute top-0 left-0 h-full bg-primary" style={{ width: `${project.progress}%` }}>
-               <div className="absolute inset-0 bg-white/20 w-full animate-shimmer" />
-            </div>
-          </div>
-          <span className="text-[10px] font-black text-zinc-500 tracking-wider tabular-nums">{project.progress}%</span>
+      {/* Progress & Feedback Section */}
+      <div className="flex flex-col gap-6 pt-8 mt-2 border-t border-zinc-900/50">
+        <div className="flex items-center justify-between">
+           <div className="flex items-center gap-5 flex-1 pr-10">
+              <div className="flex-1 h-[4px] bg-zinc-950 rounded-full overflow-hidden border border-zinc-900/50 group-hover:border-zinc-800 transition-colors">
+                <div 
+                  className={`h-full transition-all duration-[2000ms] ease-in-out ${isActive ? 'bg-primary shadow-[0_0_10px_rgba(0,122,255,0.4)]' : (isIntel ? 'bg-accent shadow-[0_0_10px_rgba(175,82,222,0.4)]' : 'bg-zinc-700')}`} 
+                  style={{ width: `${project.progress}%` }} 
+                />
+              </div>
+              <span className={`text-[11px] font-black tracking-wider tabular-nums ${isActive ? 'text-primary/70' : (isIntel ? 'text-accent/70' : 'text-zinc-600')}`}>
+                {project.progress}%
+              </span>
+           </div>
+           
+           <button
+             onClick={handleJoin}
+             disabled={isJoined || isAnimating}
+             className={`relative overflow-hidden flex items-center justify-center text-[12px] font-black uppercase tracking-[0.2em] h-12 px-8 rounded-xl transition-all duration-300 active:scale-95 shrink-0 hover:scale-[1.03] hover:brightness-110 ${
+               isJoined 
+                 ? 'bg-zinc-900 text-success border border-success/30 scale-[0.98] cursor-default' 
+                 : (isActive 
+                    ? 'bg-primary text-white shadow-[0_0_30px_rgba(0,122,255,0.3)] hover:shadow-[0_0_40px_rgba(0,122,255,0.5)]' 
+                    : (isIntel 
+                        ? 'bg-white text-black hover:bg-zinc-200 shadow-[0_0_25px_rgba(175,82,222,0.15)]' 
+                        : 'bg-white text-black hover:bg-zinc-200'))
+             }`}
+           >
+             {isAnimating ? (
+               <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+             ) : isJoined ? (
+               <div className="flex items-center gap-2 animate-in zoom-in-75 duration-300">
+                  <Check className="w-4 h-4" />
+                  <span>JOINED</span>
+               </div>
+             ) : (
+               <span>{cta || 'JOIN'}</span>
+             )}
+           </button>
         </div>
-        
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-          className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.2em] bg-white text-black px-5 py-2.5 rounded-xl hover:bg-zinc-200 transition-all active:scale-95 shrink-0"
-        >
-          {cta || 'Execute'} <ChevronDown className="w-3 h-3" />
-        </button>
       </div>
     </div>
   );

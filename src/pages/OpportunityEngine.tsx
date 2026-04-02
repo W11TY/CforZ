@@ -27,39 +27,39 @@ const OpportunityEngine = () => {
   });
 
   return (
-    <div className="space-y-16 py-8 sm:py-12 px-6 sm:px-12 animate-fade-in-up">
+    <div className="space-y-16 py-10 animate-in fade-in duration-500">
       {/* Header Section */}
       <header className="space-y-10">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-8">
-          <div className="space-y-3">
-            <h1 className="text-4xl sm:text-5xl font-display font-black tracking-tighter text-white uppercase italic">Opportunity Engine</h1>
-            <p className="text-zinc-500 text-sm sm:text-lg uppercase tracking-[0.25em] font-black leading-tight">Algorithm: High-Signal Matching</p>
+          <div className="space-y-1.5">
+            <h1 className="text-4xl font-bold tracking-tight text-white">Opportunities</h1>
+            <p className="text-zinc-500 text-[13px] font-medium tracking-tight">Search and execute high-signal projects</p>
           </div>
-          <button className="flex items-center justify-center gap-3 bg-white text-black px-8 py-4 rounded-xl text-[10px] font-black uppercase tracking-[0.3em] hover:bg-zinc-200 transition-all shadow-2xl shadow-white/5 active:scale-95">
+          <button className="flex items-center justify-center gap-2.5 bg-white text-black h-11 px-8 rounded-xl text-[12px] font-bold hover:bg-zinc-200 transition-all active:scale-95 shadow-xl shadow-white/5">
             <Plus className="w-4 h-4" /> Start Build
           </button>
         </div>
 
         {/* Global Control Bar */}
-        <div className="flex flex-col lg:flex-row gap-6 p-2 bg-zinc-950 border border-zinc-900 rounded-[20px]">
+        <div className="flex flex-col lg:flex-row gap-4 p-1.5 bg-zinc-950 border border-zinc-900 rounded-2xl">
           <div className="flex-1 relative group">
-            <Search className="w-4 h-4 absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-white transition-colors" />
+            <Search className="w-4 h-4 absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 transition-colors" />
             <input
               type="text"
-              placeholder="Query execution opportunities..."
-              className="w-full bg-transparent pl-14 pr-6 py-4 text-xs font-bold uppercase tracking-[0.1em] text-white placeholder:text-zinc-700 focus:outline-none"
+              placeholder="Filter by title, domain, or skills..."
+              className="w-full bg-transparent pl-14 pr-6 h-12 text-[13px] font-medium text-white placeholder:text-zinc-800 focus:outline-none"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="flex gap-2 p-1 overflow-x-auto scrollbar-hide">
+          <div className="flex gap-1 p-1 overflow-x-auto scrollbar-hide">
             {CATEGORIES_UPGRADED.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] whitespace-nowrap transition-all duration-300 ${
+                className={`h-10 px-6 rounded-xl text-[12px] font-semibold transition-all duration-300 ${
                   activeCategory === cat
-                    ? 'bg-zinc-800 text-white border border-zinc-700 shadow-xl'
+                    ? 'bg-zinc-800 text-white border border-zinc-700'
                     : 'text-zinc-600 hover:text-zinc-300'
                 }`}
               >
@@ -72,13 +72,13 @@ const OpportunityEngine = () => {
 
       {/* For You Section */}
       {activeCategory === 'For You' && !search && (
-        <section className="space-y-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+        <section className="space-y-8 animate-fade-in-up">
           <div className="flex items-center gap-6">
-            <h2 className="font-display font-black text-2xl tracking-tighter text-white uppercase italic">Recommended For You</h2>
+            <h2 className="font-semibold text-xl tracking-tight text-white shrink-0">Picked for you</h2>
             <div className="h-px flex-1 bg-zinc-900" />
-            <span className="text-[9px] font-black text-accent uppercase tracking-widest">High Signal Match</span>
+            <span className="text-[11px] font-bold text-accent uppercase tracking-widest">Algorithm matched</span>
           </div>
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {forYouProjects.map((p) => (
               <ProjectCard 
                 key={p.id} 
@@ -86,7 +86,7 @@ const OpportunityEngine = () => {
                 match={p.matchData.score} 
                 urgency={p.matchData.urgency} 
                 reasoning={p.matchData.reasoning}
-                cta="Join & Build"
+                cta="EXECUTE"
               />
             ))}
           </div>
@@ -94,16 +94,15 @@ const OpportunityEngine = () => {
       )}
 
       {/* Project Grid */}
-      <section className="space-y-8 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+      <section className="space-y-8 animate-fade-in-up">
         <div className="flex items-center gap-6">
-          <h2 className="font-display font-black text-2xl tracking-tighter text-white uppercase italic">
-            {activeCategory === 'For You' ? 'All Opportunities' : `${activeCategory} Opportunities`}
+          <h2 className="font-semibold text-xl tracking-tight text-white shrink-0">
+            {activeCategory === 'For You' ? 'All projects' : `${activeCategory} projects`}
           </h2>
           <div className="h-px flex-1 bg-zinc-900" />
-          <Filter className="w-4 h-4 text-zinc-600" />
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filtered.map((p) => (
             <ProjectCard 
               key={p.id} 
@@ -111,16 +110,16 @@ const OpportunityEngine = () => {
               match={p.matchData.score} 
               urgency={p.matchData.urgency} 
               reasoning={p.matchData.reasoning}
-              cta="Contribute" 
+              cta="JOIN" 
             />
           ))}
         </div>
       </section>
 
       {filtered.length === 0 && (
-        <div className="text-center py-24 space-y-4">
-          <p className="text-zinc-600 text-xs font-black uppercase tracking-[0.3em]">No Signal Detected</p>
-          <p className="text-zinc-800 text-[10px] uppercase tracking-widest">Try resetting your filter parameters</p>
+        <div className="text-center py-32 space-y-3">
+          <p className="text-white text-sm font-semibold tracking-tight">No opportunities found</p>
+          <p className="text-zinc-600 text-[12px] font-medium">Try adjusting your filters or search query</p>
         </div>
       )}
     </div>
